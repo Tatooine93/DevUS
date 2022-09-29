@@ -10,7 +10,6 @@ Mariya Krasteva and Antoine Nowak
 A dating website from devs, by devs !
 A website where you can date and chat with other devs who match your technologies, your sexual orientation, and more, thanks to the filter's options.
 
-
 ## Features:
 
 ### User:
@@ -36,4 +35,9 @@ additionnal techno.:
 
 ## Bilan:
 Le projet avance bien et sera fonctionnel d'ici la fin de la montagne mais ne sera pas stylisé selon nos plans.
-Nous comptons donc continuer a travailler sur ce projet afin qu'il aboutisse en un projet fini/profesionnel.
+Nous comptons donc continuer à travailler sur ce projet afin qu'il aboutisse en un projet fini/profesionnel.
+
+Tâche à terminer:
+- profil en frontend,
+- logique des "swipe",
+- aspect visuel du site,
