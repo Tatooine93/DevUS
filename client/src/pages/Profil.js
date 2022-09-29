@@ -8,9 +8,8 @@ const Profile = () => {
     return (
     <div className='profil-page'>
         {uid ? (
-            <h1> UPDATE PAGE</h1>
+            <h1>UPDATE PAGE</h1>
         ):(
-            
         <div className='log-container'>
             <Log signin={false} signup={true}/>
                 <div className='img-container'>

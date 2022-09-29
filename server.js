@@ -2,6 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const userRoutes = require('./routes/user.routes');
+const conversationRoutes = require('./routes/conversation.route');
+const messageRoutes = require('./routes/message.route');
+
 require('dotenv').config({path:'./config/.env'});
 require('./config/db');
 const{checkUser, requireAuth} = require('./middleware/auth.middleware');
@@ -32,7 +35,9 @@ app.get('/jwtid', requireAuth, (req, res) =>{
 });
 
 //routes
-app.use('/api/user', userRoutes)
+app.use('/api/user', userRoutes);
+app.use('/api/conversation', conversationRoutes);
+app.use('/api/message', messageRoutes);
 
 
 //server

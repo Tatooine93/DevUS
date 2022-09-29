@@ -11,6 +11,7 @@ router.get('/logout', authController.logout);
 // user display //
 router.get('/', userController.getAllUsers);
 router.get('/:id', userController.userInfo);
+router.get('/match/:id', userController.matchInfo);
 
 router.put('/:id', userController.updateUser);
 

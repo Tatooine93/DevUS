@@ -14,8 +14,12 @@ module.exports.userInfo = (req, res) => {
     }
 
     UserModel.findById(req.params.id, (err, docs) => {
-        if (!err) { return res.send(docs)}
-        else { console.log('ID unknown :' + err) }
+        if (!err) {
+            return res.send(docs)
+        }
+        else {
+            console.log('ID unknown :' + err)
+        }
     }).select('-password');
 };
 
@@ -153,6 +157,22 @@ module.exports.unlikeUser = async (req, res) => { // this delete a sended like b
     }
 };
 
+module.exports.matchInfo = async (req, res) => {
+        // check if the ID is known
+        if(!ObjectID.isValid(req.params.id) || !ObjectID.isValid(req.body.idToMatch)) {
+            return res.status(400).send('ID unknown: ' + req.params.id);
+        }
+
+        UserModel.findById(req.params.id, (err, docs) => {
+            if (!err) {
+                return res.send(docs)
+            }
+            else {
+                console.log('ID unknown :' + err)
+            }
+        }).select('matchs');
+};
+
 module.exports.matchUser = async (req, res) => {
     // check if the ID is known
     if(!ObjectID.isValid(req.params.id) || !ObjectID.isValid(req.body.idToMatch)) {
@@ -162,8 +182,11 @@ module.exports.matchUser = async (req, res) => {
     try {
         await UserModel.findByIdAndUpdate(
             req.params.id,
-            { $addToSet:{ matchs: req.body.idToMatch }},
-            {new: true, upsert: true}
+            {
+            $addToSet:{ matchs: req.body.idToMatch },
+            $pull: { likes: req.body.idToMatch }
+            },
+            {new: true, update: true}
         )
         .then((doc) => res.status(201).json(doc))
         .catch((err) => res.status(400).json(err));
@@ -171,7 +194,12 @@ module.exports.matchUser = async (req, res) => {
         //add the match to the other
         await UserModel.findByIdAndUpdate(
             req.body.idToMatch,
-            {$addToSet: { matchs: req.params.id}}
+            {
+            $addToSet: { matchs: req.params.id},
+            $pull: { liked: {likedUserId: req.params.id}}
+            },
+
+            {new: true, update: true}
         )
         //.then((doc) => res.status(201).json(doc))
         .catch((err) => res.status(400).json(err));
