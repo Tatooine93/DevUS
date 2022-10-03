@@ -1,30 +1,13 @@
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
 import React, { useEffect, useState } from "react";
 import { UidContext } from "./components/AppContext";
 import Routes from "./components/routes";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { getUser } from "./actions/user.actions";
 
 const App = () => {
   const [uid, setUid] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -37,7 +20,11 @@ const App = () => {
         .catch((err) => console.log("No Token"));
     };
     fetchToken();
-  }, [uid]); //sert à récupérer le token
+
+    if (uid) {
+      dispatch(getUser(uid));
+    }
+  }, [uid]); //sert à récupérer le token, le dispatch sert à déclencher une action
 
   return (
     <UidContext.Provider value={uid}>
