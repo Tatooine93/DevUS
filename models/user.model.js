@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema(
   {
+
     pseudo :{
       type: String,
       required: true,
@@ -76,15 +77,32 @@ const userSchema = new mongoose.Schema(
       }
     ],
 
-    location: {  //{ $set:{ 'location.lat': req.body.latitude }}, to add new location inside lat and lon
-      lat: {
-        type: Number,
-        //
-        require: true
+    filters: {
+
+      tags: {
+        type: [String],
       },
-      lon: {
-        type: Number,
-        //require: true
+
+      minAge: {type: Number},
+      
+      maxAge: {type: Number},
+
+      orientation: [String],
+
+      distance:{
+        type: Number
+      },
+
+      location: {
+        type: {
+          type: String,
+          enum: ["Point"],
+          default: "Point"
+        },
+        coordinates: {
+          type: [Number],
+          default: [0,0]
+        }
       }
     }
   },
@@ -93,6 +111,10 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+userSchema.index({
+  "filters.location": "2dsphere"
+});
 
 // execute function before save into DB
 

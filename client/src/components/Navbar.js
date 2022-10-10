@@ -19,6 +19,13 @@ const Navbar = () => {
                         </div>
                     </NavLink>
                 </div>
+                
+                <div className="matchPage">
+                    <NavLink exact="true" to="/matchs">
+                            <h3>Your Matchs</h3>
+                    </NavLink>
+                </div>
+
                 {uid? (
                     <ul>
                         <li></li>

@@ -14,4 +14,4 @@ const Message = ({message, own}) => {
     )
 };
 
-export default Message
+export default Message;

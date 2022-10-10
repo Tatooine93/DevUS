@@ -38,7 +38,7 @@ const SingInForm = () => {
     };
 
     return (
-        <form action="" onSubmit={handleLogin} id="sign-up-form">
+        <form action="" onSubmit={handleLogin} id="sign-in-form">
             <input type="text" name="email" id="email" onChange={(e) => setEmail(e.target.value)} placeholder="Email" value={email}/>
             <div className="email error"></div>
             <br/>

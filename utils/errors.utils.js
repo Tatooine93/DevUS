@@ -2,11 +2,11 @@ module.exports.signUpErrors = (err) => {
     let errors = {pseudo: '', email: '', password: ''};
 
     if (err.message.includes('pseudo')) {
-        errors.pseudo = "Pseudo incorrecte ou déjà pris";
+        errors.pseudo = "Pseudo incorrect ou déjà pris";
     }
 
     if (err.message.includes('email')) {
-        errors.email = "Email incorrecte";
+        errors.email = "Email incorrect";
     }
 
     if (err.message.includes('password')) {
@@ -28,11 +28,11 @@ module.exports.signInErrors = (err) => {
     let errors = {email: '', password: ''};
 
     if (err.message.includes('email')) {
-        errors.email = "Email incorrecte";
+        errors.email = "Email incorrect";
     }
 
     if (err.message.includes('password')) {
-        errors.password = "Mot de passe incorrecte";
+        errors.password = "Mot de passe incorrect";
     }
 
     return errors;

@@ -1,13 +1,46 @@
 const UserModel = require('../models/user.model');
+const ConversationModel = require('../models/conversation.model');
 const ObjectID = require('mongoose').Types.ObjectId;
 
-module.exports.getAllUsers = async (req , res) => {
+/* module.exports.getAllUsers = async (req , res) => {
+    //console.log(req.query.location);
     const users = await UserModel.find().select('-password');
     res.status(200).json(users);
+}; */
+
+module.exports.getAllUsers = async (req , res) => {
+
+    const liked = req.query.liked;
+    const likedId = [];
+
+    liked?.forEach(function(item){
+        likedId.push(JSON.parse(item).likedUserId);
+        });
+
+
+    const users = await UserModel.find({
+/*             'filters.location': {
+                $nearSphere: {
+                    $geometry: {
+                        type: "Point",
+                        coordinates: req.query.location
+                    },
+                    //$minDistance: 1000,
+                    $maxDistance: req.query.distance * 1000 //convert to meters
+                }
+            }, */
+            _id: {$ne: req.query.uid, $nin: req.query.matchs, $nin: likedId}, //to exclude current user, exclude users already match or liked
+            //tags: {$in: req.query.tags}, 
+            //age: {$gte: req.query.minAge , $lte: req.query.maxAge}
+        }
+        ).select('-password');
+    
+    res.status(200).json(users);
+    //console.log(users);
 };
 
 module.exports.userInfo = (req, res) => {
-    console.log(req.params);
+    //console.log(req.params);
     // check if the ID is known
     if(!ObjectID.isValid(req.params.id)) {
         return res.status(400).send('ID unknown: ' + req.params.id);
@@ -57,14 +90,36 @@ module.exports.updateUser = async (req, res) => {
     if(!ObjectID.isValid(req.params.id)) {
         return res.status(400).send('ID unknown: ' + req.params.id);
     }
+
+    const entries = Object.keys(req.body)
+    const updates = {}
     
+
+    // constructing dynamic query
+
+    for (let i = 0; i < entries.length; i++) {
+    updates[entries[i]] = Object.values(req.body)[i]
+    }
+
     try {
         await UserModel.findOneAndUpdate(
             {_id: req.params.id},
             {
-                $set: {
-                    description: req.body.description
-                }
+                $set: updates/* {
+                    pseudo: req.body.pseudo,
+                    picture: req.body.picture,
+                    description: req.body.description,
+                    age: req.body.age,
+                    tags: req.body.tags,
+                    
+
+                    'filters.tags': req.body.filters.tags,
+                    'filters.minAge': req.body.filters.minAge,
+                    'filters.maxAge': req.body.filters.maxAge,
+                    'filters.orientation': req.body.filters.orientation,
+                    'filters.distance': req.body.filters.distance,
+                    'filters.location': req.body.coordinates,
+                } */
             },
             {new: true, upsert: true, setDefaultsOnInsert: true}
         )
@@ -203,11 +258,13 @@ module.exports.matchUser = async (req, res) => {
         )
         //.then((doc) => res.status(201).json(doc))
         .catch((err) => res.status(400).json(err));
+
     }
 
     catch(err) {
         return res.status(500).json({message: err});
     }
+
 };
 
 module.exports.unmatchUser = async (req, res) => {
